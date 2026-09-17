@@ -440,3 +440,53 @@ html.tg-light .surah-card .surah-page-separator::before,
 html.tg-light .surah-card .surah-page-separator::after {
   background: rgba(181,154,93,.15) !important;
 }
+
+/* ===== TG fixes v3 ===== */
+
+/* 1) تكبير آية آمن الرسول الطويلة */
+@media (max-width: 600px) {
+  .reading-card:not(.surah-card).tg-dhikr-xlong .reading-copy p {
+    font-size: clamp(17px, 4.5vw, 20px) !important;
+    line-height: 1.7 !important;
+  }
+
+  .reading-card:not(.surah-card).tg-dhikr-long .reading-copy p {
+    font-size: clamp(18px, 4.8vw, 21px) !important;
+    line-height: 1.75 !important;
+  }
+}
+
+
+/* 2) المزيد يمين */
+.icon-button.mobile-only {
+  left: auto !important;
+  right: 12px !important;
+}
+
+
+/* 2) زر الوضع الليلي/الفاتح يسار */
+.tg-theme-toggle {
+  right: auto !important;
+  left: 12px !important;
+}
+
+
+/* للشاشات الصغيرة */
+@media (max-width: 380px) {
+  .icon-button.mobile-only {
+    left: auto !important;
+    right: 8px !important;
+  }
+
+  .tg-theme-toggle {
+    right: auto !important;
+    left: 8px !important;
+  }
+}
+
+
+/* 3) حذف "بداية اليوم" و "نهاية اليوم"
+   بدون حذف "قراءة مباركة" من سورة الكهف */
+.reading-card:not(.surah-card) .card-topline .eyebrow {
+  display: none !important;
+}
