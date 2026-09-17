@@ -46,7 +46,7 @@
     saved = localStorage.getItem(KEY);
   } catch (_) {}
 
-  apply(saved === 'dark' ? 'dark' : 'light');
+  apply(saved === 'light' ? 'light' : 'dark');
 
   function mountToggle() {
     const bar = document.querySelector('.topbar');
