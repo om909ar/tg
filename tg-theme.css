@@ -396,3 +396,47 @@ html.tg-dark .surah-card {
   .brand-mark { width:44px !important;height:44px !important;flex-basis:44px !important; }
   .brand-mark img { width:32px !important;height:32px !important; }
 }
+
+
+/* TG fixes v2: keep long adhkar inside the card + light Surah palette */
+@media (max-width: 600px) {
+  .reading-card:not(.surah-card).tg-dhikr-long .reading-copy p {
+    font-size: clamp(14px, 3.65vw, 17px) !important;
+    line-height: 1.7 !important;
+  }
+
+  .reading-card:not(.surah-card).tg-dhikr-xlong .reading-copy p {
+    font-size: clamp(11.8px, 3.05vw, 14px) !important;
+    line-height: 1.58 !important;
+  }
+
+  .reading-card:not(.surah-card).tg-dhikr-long .reading-copy,
+  .reading-card:not(.surah-card).tg-dhikr-xlong .reading-copy {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    overflow: hidden !important;
+    justify-content: center !important;
+  }
+}
+
+/* Surah Al-Kahf: light mode only. Dark mode remains untouched. */
+html.tg-light .surah-card .surah-page {
+  background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(247,241,229,.92)) !important;
+  border: 1px solid rgba(181,154,93,.18) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.88) !important;
+}
+html.tg-light .surah-card .surah-text {
+  color: var(--tg-ink) !important;
+}
+html.tg-light .surah-card .surah-text p,
+html.tg-light .surah-card .surah-bismillah,
+html.tg-light .surah-card .surah-page-separator span {
+  color: #9a7630 !important;
+}
+html.tg-light .surah-card .surah-page-separator {
+  border-color: rgba(181,154,93,.18) !important;
+}
+html.tg-light .surah-card .surah-page-separator::before,
+html.tg-light .surah-card .surah-page-separator::after {
+  background: rgba(181,154,93,.15) !important;
+}
