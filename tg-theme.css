@@ -490,3 +490,9 @@ html.tg-light .surah-card .surah-page-separator::after {
 .reading-card:not(.surah-card) .card-topline .eyebrow {
   display: none !important;
 }
+
+/* إزالة الدائرة الشفافة داخل كرت أذكار الصباح والمساء */
+.reading-card:not(.surah-card)::after {
+  display: none !important;
+  content: none !important;
+}
