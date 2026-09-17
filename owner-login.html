@@ -1,0 +1,1462 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>حصنك | لوحة المالك</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #081a15;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0 30px;
+    }
+
+    .card {
+      background: #10251f;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      border: 1px solid #31534a;
+      background: #081a15;
+      color: white;
+      font-size: 16px;
+      direction: ltr;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #d6b36a;
+      color: #081a15;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #244139;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .error {
+      color: #ff9b9b;
+    }
+
+    .success {
+      color: #a9e6b5;
+    }
+
+    .suggestion {
+      background: #081a15;
+      border: 1px solid #29483f;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .unread {
+      border-color: #d6b36a;
+    }
+
+    .date {
+      color: #9bb0aa;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .actions button {
+      flex: 1;
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .top h1 {
+      margin: 0;
+      text-align: right;
+    }
+
+    .top button {
+      width: auto;
+      padding: 10px 15px;
+    }
+
+    .count {
+      color: #d6b36a;
+      margin-bottom: 15px;
+    }
+
+    /* =========================
+       إحصائيات الزيارات
+       ========================= */
+
+    .stats-title {
+      color: #d6b36a;
+      margin: 0 0 18px;
+      font-size: 21px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .stat-box {
+      background: #081a15;
+      border: 1px solid #29483f;
+      border-radius: 16px;
+      padding: 18px 10px;
+      text-align: center;
+    }
+
+    .stat-box.total {
+      grid-column: 1 / -1;
+    }
+
+    .stat-label {
+      color: #9bb0aa;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .stat-number {
+      color: #d6b36a;
+      font-size: 29px;
+      font-weight: bold;
+    }
+
+    .refresh-visits {
+      margin-top: 15px;
+      background: #244139;
+      color: white;
+      font-size: 14px;
+      padding: 11px;
+    }
+  </style>
+</head>
+
+<body style="visibility:hidden">
+
+<div class="container">
+
+  <button
+    type="button"
+    onclick="location.href='./'"
+    style="
+      width:auto;
+      padding:10px 16px;
+      background:#244139;
+      color:white;
+      font-size:14px;
+      margin-bottom:15px;
+    "
+  >
+    ← العودة للرئيسية
+  </button>
+
+
+  
+  <!-- =========================
+       تسجيل الدخول
+       ========================= -->
+
+  <section id="loginSection">
+
+    <h1>حصنك</h1>
+
+    <div class="card">
+
+      <h2>دخول المالك</h2>
+
+      <form id="loginForm">
+
+        <input
+          id="email"
+          type="email"
+          placeholder="البريد الإلكتروني"
+          autocomplete="username"
+          required
+        >
+
+        <input
+          id="password"
+          type="password"
+          placeholder="كلمة المرور"
+          autocomplete="current-password"
+          required
+        >
+
+        <button type="submit">
+          تسجيل الدخول
+        </button>
+
+      </form>
+
+      <div id="loginMessage" class="message"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       لوحة المالك
+       ========================= -->
+
+  <section
+    id="dashboardSection"
+    class="hidden"
+  >
+
+    <div class="top">
+
+      <h1>لوحة المالك</h1>
+
+      <button
+        id="logoutButton"
+        class="secondary"
+      >
+        تسجيل الخروج
+      </button>
+
+    </div>
+
+
+    <!-- =========================
+         إحصائيات الموقع
+         ========================= -->
+
+    <div class="card">
+
+      <h2 class="stats-title">
+        إحصائيات حصنك
+      </h2>
+
+      <div class="stats-grid">
+
+        <div class="stat-box">
+
+          <div class="stat-label">
+            زيارات اليوم
+          </div>
+
+          <div
+            id="visitsToday"
+            class="stat-number"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="stat-box">
+
+          <div class="stat-label">
+            زيارات أمس
+          </div>
+
+          <div
+            id="visitsYesterday"
+            class="stat-number"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="stat-box">
+
+          <div class="stat-label">
+            زيارات هذا الشهر
+          </div>
+
+          <div
+            id="visitsMonth"
+            class="stat-number"
+          >
+            —
+          </div>
+
+        </div>
+
+
+        <div class="stat-box total">
+
+          <div class="stat-label">
+            إجمالي الزيارات
+          </div>
+
+          <div
+            id="visitsTotal"
+            class="stat-number"
+          >
+            —
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="refreshVisits"
+        class="refresh-visits"
+      >
+        تحديث الإحصائيات
+      </button>
+
+    </div>
+
+
+    <!-- =========================
+         الاقتراحات
+         ========================= -->
+
+    <div class="card">
+
+      <div
+        id="count"
+        class="count"
+      >
+        جاري التحميل...
+      </div>
+
+      <div id="suggestionsBox">
+        جاري تحميل الاقتراحات...
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://ggnpqhozioxzctrkmbgd.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_FEWSIWV7TDvQYfZT7rTzwg_oJuQ8t7s";
+
+const SESSION_KEY =
+  "hosnek-supabase-session";
+
+
+/* =========================
+   عناصر الصفحة
+   ========================= */
+
+const loginSection =
+  document.getElementById("loginSection");
+
+const dashboardSection =
+  document.getElementById("dashboardSection");
+
+const loginForm =
+  document.getElementById("loginForm");
+
+const loginMessage =
+  document.getElementById("loginMessage");
+
+const suggestionsBox =
+  document.getElementById("suggestionsBox");
+
+const count =
+  document.getElementById("count");
+
+const logoutButton =
+  document.getElementById("logoutButton");
+
+const visitsToday =
+  document.getElementById("visitsToday");
+
+const visitsYesterday =
+  document.getElementById("visitsYesterday");
+
+const visitsMonth =
+  document.getElementById("visitsMonth");
+
+const visitsTotal =
+  document.getElementById("visitsTotal");
+
+const refreshVisits =
+  document.getElementById("refreshVisits");
+
+
+/* =========================
+   الرسائل
+   ========================= */
+
+function showMessage(text, type = "") {
+
+  loginMessage.textContent = text;
+
+  loginMessage.className =
+    "message " + type;
+
+}
+
+
+/* =========================
+   الجلسة
+   ========================= */
+
+function getSession() {
+
+  try {
+
+    return JSON.parse(
+      sessionStorage.getItem(SESSION_KEY) || "null"
+    );
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+
+function saveSession(session) {
+
+  sessionStorage.setItem(
+    SESSION_KEY,
+    JSON.stringify(session)
+  );
+
+}
+
+
+function clearSession() {
+
+  sessionStorage.removeItem(SESSION_KEY);
+
+}
+
+
+/* =========================
+   اتصال Supabase
+   نفس طريقة النسخة التجريبية
+   ========================= */
+
+async function ownerFetch(
+  path,
+  options = {}
+) {
+
+  const session = getSession();
+
+  const headers = {
+
+    apikey:
+      SUPABASE_KEY,
+
+    "Content-Type":
+      "application/json",
+
+    ...(options.headers || {})
+
+  };
+
+
+  if (session?.access_token) {
+
+    headers.Authorization =
+      "Bearer " +
+      session.access_token;
+
+  }
+
+
+  const response =
+    await fetch(
+      SUPABASE_URL + path,
+      {
+        ...options,
+        headers
+      }
+    );
+
+
+  if (!response.ok) {
+
+    let message =
+      "Request failed";
+
+    try {
+
+      const data =
+        await response.json();
+
+      message =
+        data.message ||
+        data.error_description ||
+        data.error ||
+        message;
+
+    } catch {}
+
+
+    const error =
+      new Error(message);
+
+    error.status =
+      response.status;
+
+    throw error;
+
+  }
+
+
+  return response;
+
+}
+
+
+/* =========================
+   تسجيل الدخول
+   ========================= */
+
+loginForm.addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+
+    if (!email || !password) {
+
+      showMessage(
+        "اكتب البريد الإلكتروني وكلمة المرور.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    showMessage(
+      "جاري تسجيل الدخول..."
+    );
+
+
+    try {
+
+      const response =
+        await fetch(
+          SUPABASE_URL +
+          "/auth/v1/token?grant_type=password",
+          {
+
+            method:
+              "POST",
+
+            headers: {
+
+              apikey:
+                SUPABASE_KEY,
+
+              "Content-Type":
+                "application/json"
+
+            },
+
+            body:
+              JSON.stringify({
+
+                email,
+                password
+
+              })
+
+          }
+        );
+
+
+      const session =
+        await response.json();
+
+
+      if (!response.ok) {
+
+        showMessage(
+          session.error_description ||
+          session.msg ||
+          session.error ||
+          "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if (!session.access_token) {
+
+        showMessage(
+          "لم يتم استلام جلسة الدخول.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * نحفظ جلسة Supabase كاملة
+       * مثل النسخة التجريبية
+       */
+
+      saveSession(session);
+
+
+      /*
+       * نتحقق من حساب المالك
+       */
+
+      const userResponse =
+        await ownerFetch(
+          "/auth/v1/user"
+        );
+
+
+      const user =
+        await userResponse.json();
+
+
+      if (
+        !user ||
+        !user.app_metadata ||
+        user.app_metadata.role !== "admin"
+      ) {
+
+        clearSession();
+
+        showMessage(
+          "هذا الحساب ليس حساب مالك.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * فتح لوحة المالك
+       */
+
+      loginSection.classList.add(
+        "hidden"
+      );
+
+      dashboardSection.classList.remove(
+        "hidden"
+      );
+
+
+      showMessage("");
+
+
+      /*
+       * تحميل الاثنين
+       */
+
+      await loadSuggestions();
+
+      await loadVisitStats();
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "Owner login error:",
+        error
+      );
+
+      showMessage(
+        "حدث خطأ في الاتصال. حاول مرة أخرى.",
+        "error"
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   الاقتراحات
+   ========================= */
+
+async function loadSuggestions() {
+
+  const session =
+    getSession();
+
+
+  if (!session?.access_token) {
+
+    return;
+
+  }
+
+
+  suggestionsBox.innerHTML =
+    "جاري تحميل الاقتراحات...";
+
+
+  try {
+
+    const response =
+      await ownerFetch(
+        "/rest/v1/suggestions" +
+        "?select=id,message,created_at,is_read" +
+        "&order=created_at.desc"
+      );
+
+
+    const data =
+      await response.json();
+
+
+    count.textContent =
+      "عدد الاقتراحات: " +
+      data.length;
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      suggestionsBox.innerHTML =
+        `
+        <div>
+          لا توجد اقتراحات حتى الآن.
+        </div>
+        `;
+
+      return;
+
+    }
+
+
+    suggestionsBox.innerHTML =
+      data.map(
+        function(item) {
+
+          const date =
+            new Date(
+              item.created_at
+            ).toLocaleString(
+              "ar-SA",
+              {
+                dateStyle:
+                  "medium",
+
+                timeStyle:
+                  "short"
+              }
+            );
+
+
+          return `
+            <div
+              class="suggestion ${
+                item.is_read
+                  ? ""
+                  : "unread"
+              }"
+            >
+
+              <div>
+                ${escapeHtml(
+                  item.message
+                )}
+              </div>
+
+              <div class="date">
+                ${escapeHtml(
+                  date
+                )}
+              </div>
+
+              <div class="actions">
+
+                ${
+                  item.is_read
+                    ? ""
+                    : `
+                      <button
+                        onclick="markAsRead('${item.id}')"
+                      >
+                        تم القراءة
+                      </button>
+                    `
+                }
+
+                <button
+                  class="secondary"
+                  onclick="deleteSuggestion('${item.id}')"
+                >
+                  حذف
+                </button>
+
+              </div>
+
+            </div>
+          `;
+
+        }
+      ).join("");
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Suggestions error:",
+      error
+    );
+
+
+    if (
+      error.status === 401 ||
+      error.status === 403
+    ) {
+
+      clearSession();
+
+      logout();
+
+      return;
+
+    }
+
+
+    suggestionsBox.innerHTML =
+      "حدث خطأ أثناء تحميل الاقتراحات.";
+
+  }
+
+}
+
+
+/* =========================
+   تحديد كمقروء
+   ========================= */
+
+async function markAsRead(id) {
+
+  try {
+
+    await ownerFetch(
+      "/rest/v1/suggestions?id=eq." +
+      encodeURIComponent(id),
+      {
+
+        method:
+          "PATCH",
+
+        headers: {
+
+          Prefer:
+            "return=minimal"
+
+        },
+
+        body:
+          JSON.stringify({
+
+            is_read:
+              true
+
+          })
+
+      }
+    );
+
+
+    await loadSuggestions();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Mark read error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================
+   حذف الاقتراح
+   ========================= */
+
+async function deleteSuggestion(id) {
+
+  if (
+    !confirm(
+      "هل تريد حذف هذا الاقتراح؟"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await ownerFetch(
+      "/rest/v1/suggestions?id=eq." +
+      encodeURIComponent(id),
+      {
+
+        method:
+          "DELETE"
+
+      }
+    );
+
+
+    await loadSuggestions();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Delete suggestion error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================
+   عداد الزيارات
+   ========================= */
+
+async function getVisitCount(
+  startDate,
+  endDate = null
+) {
+
+  let url =
+    "/rest/v1/site_visits" +
+    "?select=id";
+
+
+  if (startDate) {
+
+    url +=
+      "&visited_at=gte." +
+      encodeURIComponent(
+        startDate.toISOString()
+      );
+
+  }
+
+
+  if (endDate) {
+
+    url +=
+      "&visited_at=lt." +
+      encodeURIComponent(
+        endDate.toISOString()
+      );
+
+  }
+
+
+  const response =
+    await ownerFetch(
+      url,
+      {
+
+        headers: {
+
+          Prefer:
+            "count=exact",
+
+          Range:
+            "0-0"
+
+        }
+
+      }
+    );
+
+
+  const contentRange =
+    response.headers.get(
+      "Content-Range"
+    );
+
+
+  if (!contentRange) {
+
+    return 0;
+
+  }
+
+
+  const total =
+    contentRange.split("/")[1];
+
+
+  if (
+    !total ||
+    total === "*"
+  ) {
+
+    return 0;
+
+  }
+
+
+  return Number(total);
+
+}
+
+
+/* =========================
+   تحميل إحصائيات الزيارات
+   ========================= */
+
+async function loadVisitStats() {
+
+  visitsToday.textContent =
+    "…";
+
+  visitsYesterday.textContent =
+    "…";
+
+  visitsMonth.textContent =
+    "…";
+
+  visitsTotal.textContent =
+    "…";
+
+
+  const now =
+    new Date();
+
+
+  const todayStart =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+
+
+  const tomorrowStart =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() + 1
+    );
+
+
+  const yesterdayStart =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate() - 1
+    );
+
+
+  const monthStart =
+    new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      1
+    );
+
+
+  try {
+
+    const results =
+      await Promise.all([
+
+        getVisitCount(
+          todayStart,
+          tomorrowStart
+        ),
+
+        getVisitCount(
+          yesterdayStart,
+          todayStart
+        ),
+
+        getVisitCount(
+          monthStart,
+          tomorrowStart
+        ),
+
+        getVisitCount(
+          new Date(0),
+          null
+        )
+
+      ]);
+
+
+    visitsToday.textContent =
+      results[0];
+
+    visitsYesterday.textContent =
+      results[1];
+
+    visitsMonth.textContent =
+      results[2];
+
+    visitsTotal.textContent =
+      results[3];
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Visit statistics error:",
+      error
+    );
+
+
+    visitsToday.textContent =
+      "—";
+
+    visitsYesterday.textContent =
+      "—";
+
+    visitsMonth.textContent =
+      "—";
+
+    visitsTotal.textContent =
+      "—";
+
+  }
+
+}
+
+
+/* =========================
+   تحديث الإحصائيات
+   ========================= */
+
+refreshVisits.addEventListener(
+  "click",
+  async function() {
+
+    refreshVisits.disabled =
+      true;
+
+    refreshVisits.textContent =
+      "جاري التحديث...";
+
+
+    await loadVisitStats();
+
+
+    refreshVisits.disabled =
+      false;
+
+    refreshVisits.textContent =
+      "تحديث الإحصائيات";
+
+  }
+);
+
+
+/* =========================
+   تسجيل الخروج
+   ========================= */
+
+logoutButton.addEventListener(
+  "click",
+  logout
+);
+
+
+function logout() {
+
+  clearSession();
+
+  dashboardSection.classList.add(
+    "hidden"
+  );
+
+  loginSection.classList.remove(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "password"
+  ).value = "";
+
+
+  suggestionsBox.innerHTML =
+    "جاري تحميل الاقتراحات...";
+
+  count.textContent =
+    "جاري التحميل...";
+
+}
+
+
+/* =========================
+   حماية النصوص
+   ========================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+/* =========================
+   تشغيل الجلسة المحفوظة
+   ========================= */
+
+async function checkSavedLogin() {
+
+  let session = getSession();
+
+if (!session?.access_token) {
+  document.body.style.visibility = "visible";
+  return;
+}
+
+loginSection.classList.add("hidden");
+
+  try {
+
+    let response =
+      await ownerFetch(
+        "/auth/v1/user"
+      );
+
+
+    /* إذا انتهت صلاحية التوكن نجددها */
+
+    if (!response.ok && session.refresh_token) {
+
+      const refreshResponse =
+        await fetch(
+          SUPABASE_URL +
+          "/auth/v1/token?grant_type=refresh_token",
+          {
+            method: "POST",
+
+            headers: {
+              "apikey":
+                SUPABASE_KEY,
+
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              refresh_token:
+                session.refresh_token
+            })
+          }
+        );
+
+
+      if (refreshResponse.ok) {
+
+        const newSession =
+          await refreshResponse.json();
+
+        saveSession(newSession);
+
+        session = newSession;
+
+        response =
+          await ownerFetch(
+            "/auth/v1/user"
+          );
+
+      }
+
+    }
+
+
+    if (!response.ok) {
+      clearSession();
+      document.body.style.visibility = "visible";
+      return;
+    }
+
+
+    const user =
+      await response.json();
+
+
+    if (
+      !user ||
+      !user.app_metadata ||
+      user.app_metadata.role !== "admin"
+    ) {
+
+      clearSession();
+      document.body.style.visibility = "visible";
+      return;
+
+    }
+
+
+    loginSection.classList.add(
+      "hidden"
+    );
+
+    dashboardSection.classList.remove(
+      "hidden"
+    );
+
+
+    await loadSuggestions();
+
+    await loadVisitStats();
+
+    document.body.style.visibility = "visible";
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Saved session error:",
+      error
+    );
+
+    clearSession();
+
+  }
+
+}
+
+/* تشغيل */
+
+checkSavedLogin();
+
+  
+</script>
+
+</body>
+</html>
